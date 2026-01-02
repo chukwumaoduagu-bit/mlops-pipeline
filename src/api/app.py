@@ -1,4 +1,4 @@
- # src/api/app.py
+# src/api/app.py
 import os
 from flask import Flask, request, jsonify
 import numpy as np
@@ -9,6 +9,11 @@ model = RandomForestRegressor(n_estimators=10, random_state=42)
 model.fit(np.random.rand(100, 8), np.random.rand(100))
 
 app = Flask(__name__)
+
+# ✅ Add home route HERE (before predict and main)
+@app.route("/")
+def home():
+    return "✅ MLOps Prediction API is live! Send POST to /predict"
 
 @app.route("/predict", methods=["POST"])
 def predict():
