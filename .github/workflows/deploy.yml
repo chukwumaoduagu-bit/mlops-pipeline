@@ -1,4 +1,4 @@
-name: Deploy MLOps API to Cloud Run
+ame: Deploy MLOps API to Cloud Run
 
 on:
   push:
@@ -45,3 +45,47 @@ jobs:
             --region ${{ env.REGION }} \
             --allow-unauthenticated \
             --timeout 60
+name: Deploy MLOps API to Cloud Run
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Authenticate to Google Cloud
+        uses: google-github-actions/auth@v3
+        with:
+          project_id: clever-muse-483020-j5
+          workload_identity_provider: projects/928351043184/locations/global/workloadIdentityPools/github-pool/providers/github-provider
+          service_account: github-actions@clever-muse-483020-j5.iam.gserviceaccount.com
+
+      - name: Set up Docker
+        run: gcloud auth configure-docker
+
+      - name: Build and push image
+        run: |
+          IMAGE="gcr.io/clever-muse-483020-j5/mlops-api:$GITHUB_SHA"
+          docker build -t "$IMAGE" .
+          docker push "$IMAGE"
+
+      - name: Deploy to Cloud Run
+        run: |
+          gcloud run deploy mlops-api \
+            --image "gcr.io/clever-muse-483020-j5/mlops-api:$GITHUB_SHA" \
+            --platform managed \
+            --region us-central1 \
+            --allow-unauthenticated \
+            --timeout 60 \
+            --quiet
+
+
