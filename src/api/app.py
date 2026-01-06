@@ -4,10 +4,9 @@ import numpy as np
 from flask import Flask, request, jsonify
 from sklearn.ensemble import RandomForestRegressor
 
-# Always use a safe dummy model in production
+# Safe dummy model — guaranteed to work
 model = RandomForestRegressor(n_estimators=10, random_state=42)
 model.fit(np.random.rand(100, 8), np.random.rand(100))
-print("✅ Using dummy model (production-safe)")
 
 app = Flask(__name__)
 
