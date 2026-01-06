@@ -25,6 +25,10 @@ app = Flask(__name__)
 def home():
     return "✅ MLOps Prediction API is live! Send POST to /predict"
 
+@app.route("/health")
+def health():
+    return {"status": "healthy", "model": "loaded"}
+
 @app.route("/predict", methods=["POST"])
 def predict():
     try:
