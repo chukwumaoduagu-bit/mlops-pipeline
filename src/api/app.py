@@ -4,23 +4,10 @@ import numpy as np
 from flask import Flask, request, jsonify
 from sklearn.ensemble import RandomForestRegressor
 
-# Create a fallback dummy model (works everywhere)
+# Always use a safe dummy model in production
 model = RandomForestRegressor(n_estimators=10, random_state=42)
 model.fit(np.random.rand(100, 8), np.random.rand(100))
-
-# Try to load real model ONLY if artifacts exist (local dev only)
-try:
-    import mlflow
-    mlflow.set_tracking_uri("sqlite:///mlflow.db")
-    model_path = "mlruns/1/models/m-bac02099befc4ea4b5bb1b3326da91a9/artifacts"
-    if os.path.exists(model_path):
-        model = mlflow.sklearn.load_model(model_path)
-        print("✅ Loaded real trained model")
-    else:
-        print("⚠️ Model artifacts not found — using dummy model")
-except Exception as e:
-    print(f"⚠️ Failed to load real model: {e}")
-    # Keep dummy model (no action needed)
+print("✅ Using dummy model (production-safe)")
 
 app = Flask(__name__)
 
