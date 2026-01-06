@@ -23,7 +23,7 @@ def health():
 def predict():
     try:
         data = request.get_json()
-        if not data or "features" not in 
+        if not data or "features" not in data:
             return jsonify({"error": "Missing 'features' in JSON body"}), 400
         features = np.array(data["features"]).reshape(1, -1)
         pred = model.predict(features)[0]
