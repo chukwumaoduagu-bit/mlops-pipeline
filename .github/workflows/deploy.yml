@@ -5,7 +5,6 @@ on:
     branches: [ main ]
 
 permissions:
-  id-token: write
   contents: read
 
 jobs:
@@ -15,19 +14,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Install gcloud
+        run: |
+          sudo apt-get update && sudo apt-get install -y google-cloud-cli
+
       - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          project_id: clever-muse-483020-j5
-          workload_identity_provider: projects/928351043184/locations/global/workloadIdentityPools/github-pool/providers/github-provider
-          service_account: github-actions@clever-muse-483020-j5.iam.gserviceaccount.com
+        run: |
+          echo '${{ secrets.GCP_SA_KEY }}' > gcp-key.json
+          gcloud auth activate-service-account --key-file=gcp-key.json
+          gcloud config set project clever-muse-483020-j5
 
-      - name: Set up gcloud CLI
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: clever-muse-483020-j5
-
-      - name: Build and push image
+      - name: Build and push Docker image
         run: |
           gcloud auth configure-docker
           docker build -t gcr.io/clever-muse-483020-j5/mlops-api:$GITHUB_SHA .
