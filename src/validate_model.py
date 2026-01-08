@@ -3,31 +3,24 @@ import numpy as np
 import sys
 import os
 
-# Ensure src is in path
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def validate_model():
-    # Path to your trained model
     model_path = "mlruns/1/models/m-e77df8e09a614f98b3cf62999eea4c82/model.pkl"
     
     if not os.path.exists(model_path):
         print("❌ Model not found!")
         sys.exit(1)
     
-    # Load model
     model = joblib.load(model_path)
-    
-    # Test input: California Housing (8 features)
     test_input = np.array([[8.0, 0.5, 6.0, 1.0, 300.0, 3.0, 35.0, -120.0]])
     
-    # Predict
     try:
         prediction = model.predict(test_input)
     except Exception as e:
         print(f"❌ Prediction failed: {e}")
         sys.exit(1)
     
-    # Validate output
     if np.isnan(prediction).any():
         print("❌ Prediction contains NaN!")
         sys.exit(1)
