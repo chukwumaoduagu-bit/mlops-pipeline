@@ -20,6 +20,9 @@ jobs:
           project_id: clever-muse-483020-j5
           service_account_key: ${{ secrets.GCP_SA_KEY }}
 
+      - name: Configure Docker for gcloud auth
+        run: gcloud auth configure-docker --quiet
+
       - name: Build and push Docker image
         run: |
           docker build -t gcr.io/clever-muse-483020-j5/mlops-api:$GITHUB_SHA .
