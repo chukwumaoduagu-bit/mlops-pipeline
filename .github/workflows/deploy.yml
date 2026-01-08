@@ -14,19 +14,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install gcloud
-        run: |
-          sudo apt-get update && sudo apt-get install -y google-cloud-cli
-
-      - name: Authenticate to Google Cloud
-        run: |
-          echo '${{ secrets.GCP_SA_KEY }}' > gcp-key.json
-          gcloud auth activate-service-account --key-file=gcp-key.json
-          gcloud config set project clever-muse-483020-j5
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: clever-muse-483020-j5
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
 
       - name: Build and push Docker image
         run: |
-          gcloud auth configure-docker
           docker build -t gcr.io/clever-muse-483020-j5/mlops-api:$GITHUB_SHA .
           docker push gcr.io/clever-muse-483020-j5/mlops-api:$GITHUB_SHA
 
