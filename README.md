@@ -32,3 +32,4 @@ Install dependencies:
 pip install -r requirements.txt<- name: Deploy to Cloud Trigger deploy -->
 <- name: Deploy to Cloud redeploy -->
 <- name: Deploy to Cloud final deploy -->
+<- name: Deploy to Cloud repo created -->
