@@ -1,2 +1,18 @@
 __pycache__/
 *.pkl
+# Videos
+*.mp4
+*.mov
+
+# MLflow
+mlflow.db
+mlruns/
+
+# Secrets
+gcp-key.json
+*.key
+*.pem
+
+# OS
+.DS_Store
+Thumbs.db
